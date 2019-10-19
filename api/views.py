@@ -2,9 +2,10 @@ from django.shortcuts import render
 
 from rest_framework.generics import ListAPIView, RetrieveAPIView, RetrieveUpdateAPIView, DestroyAPIView, CreateAPIView
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .models import Meal, Order, MealOrder
-from .serializers import MealSerializer, UserCreateSerializer, MyTokenObtainPairSerializer, MealOrderSerializer
+from .models import Meal, Order, MealOrder, Profile
+from .serializers import MealSerializer, UserCreateSerializer, MyTokenObtainPairSerializer, MealOrderSerializer, ProfileSerializer
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
 from django.contrib.auth.models import User
@@ -18,8 +19,10 @@ class MealList(ListAPIView):
     serializer_class = MealSerializer
     queryset = Meal.objects.all()
 
+
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
 
 class Checkout(APIView):
 
@@ -35,3 +38,11 @@ class Checkout(APIView):
              meal_order.save()
         print(MealOrder.objects.all())
         return Response([request.data]) 
+      
+
+class UserProfile(ListAPIView):
+	serializer_class = ProfileSerializer
+	permission_classes = [IsAuthenticated]
+	def get_queryset(self):
+		return Profile.objects.filter(user=self.request.user)
+
