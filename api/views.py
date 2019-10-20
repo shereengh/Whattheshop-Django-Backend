@@ -25,7 +25,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 
 class Checkout(APIView):
-
     def post(self, request, format=None):
         list_of_orders = request.data
         user=self.request.user
@@ -36,9 +35,11 @@ class Checkout(APIView):
              quantity = i['quantity']
              meal_order = MealOrder(meal=meal, quantity=quantity,order=order)
              meal_order.save()
-        print(MealOrder.objects.all())
-        return Response([request.data]) 
-      
+        serializer_class = MealOrderSerializer
+        return Response(serializer_class.data,status=status.HTTP_200_OK)
+        return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 class UserProfile(ListAPIView):
 	serializer_class = ProfileSerializer
