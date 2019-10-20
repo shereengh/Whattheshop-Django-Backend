@@ -44,14 +44,19 @@ class MealOrderSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserCreateSerializer()
+    orders_list = serializers.SerializerMethodField()
     class Meta:
         model = Profile
-        fields = ["user","profilepic", "bio"]
+        fields = ["user","profilepic", "bio", "orders_list"]
+
+    def get_orders_list(self, obj):
+        mealorders = Order.objects.filter(user=obj.user)
+        return OrderSerializer(mealorders, many=True).data
         
 class OrderSerializer(serializers.ModelSerializer):
     user = UserCreateSerializer()
-    mealorder = MealOrderSerializer(many=True)
+    mealorders = MealOrderSerializer(many=True)
 
     class Meta:
         model = Order
-        fields = ["user", "mealorder"]
+        fields = ["user", "mealorders"]
