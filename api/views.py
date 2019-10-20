@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import Meal, Order, MealOrder, Profile
-from .serializers import MealSerializer, UserCreateSerializer, MyTokenObtainPairSerializer, MealOrderSerializer, ProfileSerializer
+from .serializers import MealSerializer, UserCreateSerializer, MyTokenObtainPairSerializer, MealOrderSerializer, ProfileSerializer, OrderSerializer
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
 from django.contrib.auth.models import User
@@ -52,4 +52,17 @@ class UserProfile(APIView):
         
 		
 
-   
+
+# class OrdersList(ListAPIView):
+#     serializer_class = OrderSerializer
+#     permission_classes = [IsAuthenticated]
+  
+#     def get_queryset(self):
+#         return Order.objects.filter(user=self.request.user)
+        
+        # orders = Order.objects.filter(user=self.request.user)
+        # serializer_class = OrderSerializer(orders)
+        # return Response(serializer_class.data)
+
+
+
