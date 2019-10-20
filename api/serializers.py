@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Meal, MealOrder, Profile
+from .models import Meal, MealOrder, Profile, Order
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
@@ -37,12 +37,20 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class MealOrderSerializer(serializers.ModelSerializer):
+    meal = MealSerializer()
     class Meta:
         model = MealOrder
-
+        fields = ["meal","quantity"]
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-
         fields = "__all__"
+
+class OrderSerializer(serializers.ModelSerializer):
+    user = UserCreateSerializer
+    mealorder = MealOrderSerializer(many=True)
+
+    class Meta:
+        model = Order
+        fields = ["user", "mealorder"]
