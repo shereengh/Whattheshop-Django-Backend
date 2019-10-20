@@ -26,24 +26,30 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 class Checkout(APIView):
     def post(self, request, format=None):
-        list_of_orders = request.data
-        user=self.request.user
-        order = Order(user=user)
-        order.save()
-        for i in list_of_orders:
-             meal = Meal.objects.get(id=i["meal"])
-             quantity = i['quantity']
-             meal_order = MealOrder(meal=meal, quantity=quantity,order=order)
-             meal_order.save()
-        serializer_class = MealOrderSerializer
-        return Response(serializer_class.data,status=status.HTTP_200_OK)
-        return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
+        order_list = request.data
+        user = request.user
+        order = Order.objects.create(user=user)
+        for order_item in order_list:
+             MealOrder.objects.create(
+                meal_id=order_item["meal"],
+                quantity=order_item['quantity'],
+                order=order
+            )
+        # serializer_class = MealOrderSerializer
+        return Response([])
+        # return Response(serializer_class.data,status=status.HTTP_200_OK)
+        # return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
-class UserProfile(ListAPIView):
-	serializer_class = ProfileSerializer
-	permission_classes = [IsAuthenticated]
-	def get_queryset(self):
-		return Profile.objects.filter(user=self.request.user)
+class UserProfile(APIView):
+    permission_classes = [IsAuthenticated]
 
+    def get(self, request, format=None):
+        profile = Profile.objects.get(user=request.user)
+        serializer_class = ProfileSerializer(profile)
+        return Response(serializer_class.data)
+        
+		
+
+   

@@ -43,12 +43,13 @@ class MealOrderSerializer(serializers.ModelSerializer):
         fields = ["meal","quantity"]
 
 class ProfileSerializer(serializers.ModelSerializer):
+    user = UserCreateSerializer()
     class Meta:
         model = Profile
-        fields = "__all__"
-
+        fields = ["user","profilepic", "bio"]
+        
 class OrderSerializer(serializers.ModelSerializer):
-    user = UserCreateSerializer
+    user = UserCreateSerializer()
     mealorder = MealOrderSerializer(many=True)
 
     class Meta:

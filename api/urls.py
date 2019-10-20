@@ -10,5 +10,5 @@ urlpatterns = [
     path('register/', UserCreateAPIView.as_view(), name='register'),
     path('meals/', MealList.as_view(), name="meal-list" ),
     path('checkout/', Checkout.as_view(), name="checkout" ),
-    path('userprofile/', UserProfile.as_view(), name="user-profile" ),
+    path('profile/', UserProfile.as_view(), name="profile" ),
 ]
