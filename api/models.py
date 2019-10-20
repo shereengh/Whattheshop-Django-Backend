@@ -27,7 +27,10 @@ class MealOrder(models.Model):
 class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	profilepic = models.ImageField(blank=True, null=True)
-	bio = models.TextField()
+	firstname = models.CharField(max_length=100, blank=True, null=True)
+	lastname = models.CharField(max_length=100, blank=True, null=True)
+	contact = models.CharField(max_length=100,blank=True, null=True)
+	email = models.CharField(max_length=100, blank=True, null=True)
 	def __str__(self):
 		return str(self.user)
 

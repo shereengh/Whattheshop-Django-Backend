@@ -46,7 +46,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     user = UserCreateSerializer()
     class Meta:
         model = Profile
-        fields = ["user","profilepic", "bio"]
+        fields = ["user","profilepic", "firstname", "lastname","contact", "email"]
         
 class OrderSerializer(serializers.ModelSerializer):
     user = UserCreateSerializer()
