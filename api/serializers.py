@@ -47,7 +47,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     orders_list = serializers.SerializerMethodField()
     class Meta:
         model = Profile
-        fields = ["user","profilepic", "bio", "orders_list"]
+        fields = ["user","profilepic",  "firstname", "lastname","contact", "email", "orders_list"]
 
     def get_orders_list(self, obj):
         mealorders = Order.objects.filter(user=obj.user)
