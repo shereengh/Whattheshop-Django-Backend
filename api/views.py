@@ -35,22 +35,24 @@ class Checkout(APIView):
                 quantity=order_item['quantity'],
                 order=order
             )
-        # serializer_class = MealOrderSerializer
-        return Response([])
-        # return Response(serializer_class.data,status=status.HTTP_200_OK)
-        # return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
+        order = Order.objects.get(user=request.user)
+        serializer_class = OrderSerializer(order)
+        return Response(serializer_class.data)
+       
+       
 class UserProfile(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, format=None):
         profile = Profile.objects.get(user=request.user)
-        serializer_class = ProfileSerializer(profile)
-        return Response(serializer_class.data)
+        # serializer_class = ProfileSerializer(profile)
+
+        profile_serializer = ProfileSerializer(profile, context={"request": request})
+        profile_serializer.data
+
+        return Response(profile_serializer.data)
         
-		
+	
 
 
 # class OrdersList(ListAPIView):
