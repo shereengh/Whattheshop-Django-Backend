@@ -35,9 +35,9 @@ class Checkout(APIView):
                 quantity=order_item['quantity'],
                 order=order
             )
-        order = Order.objects.get(user=request.user)
-        serializer_class = OrderSerializer(order)
-        return Response(serializer_class.data)
+        # order = Order.objects.get(user=request.user)
+        # serializer_class = OrderSerializer(order)
+        return Response([])
        
        
 class UserProfile(APIView):
