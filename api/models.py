@@ -29,7 +29,7 @@ class MealOrder(models.Model):
 	order= models.ForeignKey(Order,on_delete=models.CASCADE, related_name='mealorders')
 
 	def total(self):
-		return meal.price * self.quantity
+		return self.meal.price * self.quantity
 
 
 class Profile(models.Model):

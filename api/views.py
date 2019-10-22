@@ -43,10 +43,6 @@ class UserProfile(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        try:
-            profile = request.user.profile
-        except:
-            pass
-        else:
-            profile_serializer = ProfileSerializer(profile, context={"request": request})
+        profile = request.user.profile
+        profile_serializer = ProfileSerializer(profile, context={"request": request})
         return Response(profile_serializer.data)
