@@ -24,15 +24,12 @@ class MealSerializer(serializers.ModelSerializer):
         model = Meal
         fields = "__all__"
 
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-
-        # Add custom claims
         token['name'] = user.username
-        # ...
-
         return token
 
 
@@ -42,13 +39,14 @@ class MealOrderSerializer(serializers.ModelSerializer):
         model = MealOrder
         fields = ["meal","quantity"]
 
+
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserCreateSerializer()
     orders_list = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
-        fields = ["user","profilepic", "firstname", "lastname","contact", "email", "orders_list"]
+        fields = ["user","pic","contact", "orders_list"]
 
     def get_orders_list(self, obj):
         mealorders = Order.objects.filter(user=obj.user)
@@ -57,9 +55,12 @@ class ProfileSerializer(serializers.ModelSerializer):
         
 class OrderSerializer(serializers.ModelSerializer):
     mealorders = MealOrderSerializer(many=True)
-
+    total = serializers.SerializerMethodField()
     class Meta:
         model = Order
         fields = ["id","total","timestamp","mealorders"]
+
+    def get_total(self, obj):
+        return obj.total()
 
 

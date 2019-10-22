@@ -9,6 +9,7 @@ class OrderAdmin(admin.ModelAdmin):
 	inlines = [
 	    MealOrderInline,
 	]
+
 admin.site.register(Meal)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Profile)
