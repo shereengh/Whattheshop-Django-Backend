@@ -60,4 +60,6 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ["id","mealorders"]
+        fields = ["id","total","timestamp","mealorders"]
+
+

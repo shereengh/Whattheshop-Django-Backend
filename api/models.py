@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 
 
 class Meal(models.Model):
@@ -16,12 +16,29 @@ class Meal(models.Model):
   
 class Order(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='users')
+	total = models.DecimalField(default=0.000, max_digits=10, decimal_places=3)
+	timestamp = models.DateTimeField(auto_now_add=True)
 
 
 class MealOrder(models.Model):
 	meal = models.ForeignKey(Meal, on_delete=models.CASCADE, related_name='mealorders')
 	quantity = models.PositiveIntegerField()
 	order= models.ForeignKey(Order,on_delete=models.CASCADE, related_name='mealorders')
+
+@receiver(post_save, sender=MealOrder)
+def update_cart(sender, instance, **kwargs):
+    line_cost = instance.quantity * instance.meal.price
+    instance.order.total += line_cost
+    instance.order.save()
+
+
+@receiver(post_delete, sender=MealOrder)
+def update_total(sender, instance, **kwargs):
+    line_cost2 = instance.quantity * instance.meal.price
+    instance.order.total -= line_cost2
+    instance.order.save() 
+
+
 
 
 class Profile(models.Model):
