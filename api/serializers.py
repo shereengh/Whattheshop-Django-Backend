@@ -19,6 +19,9 @@ class UserCreateSerializer(serializers.ModelSerializer):
         new_user = User(username=username, first_name=first_name, last_name=last_name, email=email)
         new_user.set_password(password)
         new_user.save()
+        profile= Profile.objects.get(user=new_user)
+        profile.contact= self.context['request'].data['contact']
+        profile.save()
         return validated_data
 
 
