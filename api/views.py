@@ -5,7 +5,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import Meal, Order, MealOrder, Profile
 from .serializers import MealSerializer, UserCreateSerializer, MyTokenObtainPairSerializer, MealOrderSerializer, ProfileSerializer, OrderSerializer
 from rest_framework.response import Response
-from rest_framework import authentication, permissions
+from rest_framework import authentication, permissions, status
 from django.contrib.auth.models import User
 
 
@@ -41,8 +41,19 @@ class Checkout(APIView):
        
 class UserProfile(APIView):
     permission_classes = [IsAuthenticated]
-
     def get(self, request):
         profile = request.user.profile
         profile_serializer = ProfileSerializer(profile, context={"request": request})
         return Response(profile_serializer.data)
+
+    def put(self, request): 
+        profile = Profile.objects.get(user=self.request.user)
+        #profile = request.user.profile
+        serializer = ProfileSerializer(data=request.data, instance=profile)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+

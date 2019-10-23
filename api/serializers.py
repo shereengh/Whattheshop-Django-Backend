@@ -43,19 +43,41 @@ class MealOrderSerializer(serializers.ModelSerializer):
         fields = ["meal","quantity"]
 
 
+class UpdateUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+
+
 class ProfileSerializer(serializers.ModelSerializer):
-    user = UserCreateSerializer()
+    user = UpdateUserSerializer()
     orders_list = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
-        fields = ["user","pic","contact", "orders_list"]
+        fields = ["user","pic","contact","orders_list"]
 
     def get_orders_list(self, obj):
         mealorders = Order.objects.filter(user=obj.user)
         return OrderSerializer(mealorders, many=True).data
 
-        
+
+    def update(self, instance, validated_data):
+        profile_data = validated_data.pop('user')
+        print ("last_name",instance.user.last_name)
+        instance.user.first_name = profile_data.get('first_name', profile_data['first_name'])
+        instance.user.last_name = profile_data.get('last_name', profile_data['last_name'])
+        instance.user.email = profile_data.get('email', profile_data['email'])
+        instance.contact = validated_data.get('contact', instance.contact)
+        instance.pic = validated_data.get('pic', instance.pic)
+        print ("last_name",instance.user.last_name)
+        print("first_name",instance.user.first_name)
+        print("email",instance.user.email)
+        instance.user.save()
+        instance.save()
+        return instance
+
+
 class OrderSerializer(serializers.ModelSerializer):
     mealorders = MealOrderSerializer(many=True)
     total = serializers.SerializerMethodField()
