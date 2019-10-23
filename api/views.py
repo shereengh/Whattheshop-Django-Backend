@@ -34,7 +34,7 @@ class Checkout(APIView):
                 quantity=order_item['quantity'],
                 order=order
             )
-        serializer = OrderSerializer(order)
+        serializer = OrderSerializer(order, context={"request": request})
         # Add status
         return Response(serializer.data)
        
