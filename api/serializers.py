@@ -53,7 +53,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_orders_list(self, obj):
         mealorders = Order.objects.filter(user=obj.user)
-        return OrderSerializer(mealorders, many=True).data
+        return OrderSerializer(mealorders, many=True, context={"request": self.context['request']}).data
 
         
 class OrderSerializer(serializers.ModelSerializer):
